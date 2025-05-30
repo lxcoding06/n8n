@@ -1,0 +1,190 @@
+{
+  "name": "BOT Spreadsheet",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -340,
+        -240
+      ],
+      "id": "56aa5141-b058-4785-b571-4175a50f99e2",
+      "name": "Telegram Trigger",
+      "webhookId": "4f8d84b6-23b3-4ec4-9a60-8d96f2ec5be6",
+      "credentials": {
+        "telegramApi": {
+          "id": "l4b9qi1PWKtkjfpa",
+          "name": "Kerja.in Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://ai.lxcoding.codes/api/trigger_checklist.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Secret",
+              "value": "KucingOrenTerbang2025!"
+            }
+          ]
+        },
+        "options": {
+          "lowercaseHeaders": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        20,
+        -440
+      ],
+      "id": "19b14163-b61f-4655-81c5-642420e19a12",
+      "name": "HTTP Request",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "5840886711",
+        "text": "={{ $json.status }}\n{{ $json.message }}\n{{ $json.target_date_processed }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        -320
+      ],
+      "id": "6418fff2-7e51-4531-a4e6-7ab66c730ad9",
+      "name": "Telegram",
+      "webhookId": "635e007c-0a54-4e65-a547-09ffa977a403",
+      "credentials": {
+        "telegramApi": {
+          "id": "l4b9qi1PWKtkjfpa",
+          "name": "Kerja.in Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8efb2c10-de3a-4837-97aa-3846e9d07e8d",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "=Done",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ $json.message.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        -340
+      ],
+      "id": "bec9012b-52a6-4d56-9daa-2f7c2dcdd192",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "5840886711",
+        "text": "Keyword Salah",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        20,
+        -160
+      ],
+      "id": "b9e968f9-236b-4aca-be73-9303b4e71a29",
+      "name": "Telegram1",
+      "webhookId": "635e007c-0a54-4e65-a547-09ffa977a403",
+      "credentials": {
+        "telegramApi": {
+          "id": "l4b9qi1PWKtkjfpa",
+          "name": "Kerja.in Bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4ad4711d-2b37-409b-9546-ba9d2dd908e5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c36e5b740d22dbf55a3da9c308a5c0c0100189fade1b17655061b17e5339162b"
+  },
+  "id": "AEEtTH6feFAAN0ON",
+  "tags": []
+}

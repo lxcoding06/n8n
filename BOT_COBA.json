@@ -1,0 +1,167 @@
+{
+  "name": "BOT COBA",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -120,
+        160
+      ],
+      "id": "b0e8897d-0de3-4a90-bec6-1481a1789d28",
+      "name": "Telegram Trigger",
+      "webhookId": "e1215ef1-e9b2-4c29-8288-392cb65282db",
+      "credentials": {
+        "telegramApi": {
+          "id": "WA2hh3VwBwbhmtUb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        140
+      ],
+      "id": "6e3c288c-b5b1-40ea-b0d0-6e886d14471a",
+      "name": "Telegram",
+      "webhookId": "3823b23d-18ec-49e7-8b40-8b6074d0cbfc",
+      "credentials": {
+        "telegramApi": {
+          "id": "WA2hh3VwBwbhmtUb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "lxcoding",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        80,
+        300
+      ],
+      "id": "4428f8a4-3b8a-4466-a1ff-7b1e7be67804",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "BrVjYaKHdrLJqz0s",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Kamu adalah LX BOT, asisten AI dari Laurent Johanes, Kamu berada di Tahun 2025 improvisasikan dirimu menjadi seseorang yang profesional dalam segala hal, Gunakan bahasa yang gaul dan keren"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        140,
+        120
+      ],
+      "id": "17c3aee6-b0e7-4259-96ac-1360f9d2a6f6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        300
+      ],
+      "id": "f08d3def-9f99-4f6f-a626-0a1c5e7de43b",
+      "name": "Window Buffer Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6e857683-f518-4953-8852-e5b93b99cdff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c36e5b740d22dbf55a3da9c308a5c0c0100189fade1b17655061b17e5339162b"
+  },
+  "id": "XTq9h2svac0XGgan",
+  "tags": []
+}

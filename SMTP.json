@@ -1,0 +1,81 @@
+{
+  "name": "SMTP",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ff868d33-41ea-4f63-91c9-78b05313696d",
+      "name": "Telegram Trigger1",
+      "webhookId": "e1215ef1-e9b2-4c29-8288-392cb65282db",
+      "credentials": {
+        "telegramApi": {
+          "id": "WA2hh3VwBwbhmtUb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "justsend666@gmail.com",
+        "subject": "Hello World!",
+        "message": "={{ $json.message.text }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "info@msi-fam.sbs",
+          "senderName": "Payments",
+          "replyToSenderOnly": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "e7154a43-a1fd-4517-8f30-3886b8f24c14",
+      "name": "Gmail",
+      "webhookId": "9b966f7b-4783-46c2-840f-d019310f0e32",
+      "alwaysOutputData": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gBkOdBY8G0Cs9trI",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7db41816-b8cc-42f9-8ab0-9158b445382e",
+  "meta": {
+    "instanceId": "c36e5b740d22dbf55a3da9c308a5c0c0100189fade1b17655061b17e5339162b"
+  },
+  "id": "NnBvd7zjId6fL76j",
+  "tags": []
+}

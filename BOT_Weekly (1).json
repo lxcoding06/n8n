@@ -1,0 +1,423 @@
+{
+  "name": "BOT Weekly",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "Extract Text",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -280
+      ],
+      "id": "0875ca38-ecbd-446c-83ad-6483390d68ff",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "BrVjYaKHdrLJqz0s",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        -600
+      ],
+      "id": "87cc2daa-81c2-47b3-955a-8f0bf294f1b0",
+      "name": "Telegram Trigger",
+      "webhookId": "3e95e844-dfdc-46ff-8239-9073c1548c05",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "x0rtIaHdPrsdaw4v",
+          "name": "F5 Weekly Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ai.lxcoding.codes/imagen/api.php",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_base64",
+              "value": "={{ $json.image_base64 }}"
+            },
+            {
+              "name": "mime_type",
+              "value": "={{ $json.mime_type }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        -560
+      ],
+      "id": "2b0903d9-5246-4a94-8349-e11150286e6d",
+      "name": "HTTP Request",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "5840886711",
+        "text": "Text",
+        "additionalFields": {}
+      },
+      "id": "c397327f-f381-4f7e-a621-3b6e9665f7c8",
+      "name": "Telegram2",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -240
+      ],
+      "webhookId": "a3ac3859-cfc0-48c7-bf3d-3385a23b0b55",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "l4b9qi1PWKtkjfpa",
+          "name": "Kerja.in Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "41ee1310-2c29-4767-afc5-abe936075db0",
+      "name": "Telegram-Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        440,
+        20
+      ],
+      "webhookId": "2e8e094f-d8e7-4ec3-b227-c3ae309a1564",
+      "credentials": {
+        "telegramApi": {
+          "id": "WA2hh3VwBwbhmtUb",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mixlr.com/v3/channels/orange-radio/recordings/{{ $('IF Photo and URL Sent').item.json.message.caption.split('/').pop() }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76"
+            },
+            {
+              "name": "_ga_BB6C571N15",
+              "value": "GS1.1.1694253452.2.1.1694254081.0.0.0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "28bcf8ed-4e28-4172-8051-46fa6cf98aa7",
+      "name": "HTTP GetURL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1340,
+        -140
+      ],
+      "executeOnce": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=*Status: {{ $json.statusCode }} {{ $json.statusMessage }}*\n**************************************************\nDevice : {{ $json.body.parsed_for_sheet.hostname }}\n**************************************************\nVar : {{ $json.body.parsed_for_sheet.var }}\nShared : {{ $json.body.parsed_for_sheet.shared }}\nConfig : {{ $json.body.parsed_for_sheet.config }}\n**************************************************\nTMM : {{ $json.body.parsed_for_sheet.tmm_memory_avg }}\nOther : {{ $json.body.parsed_for_sheet.other_memory_avg }}\nSwap : {{ $json.body.parsed_for_sheet.swap_used_avg }}\n**************************************************\nCPU (Average) : {{ $json.body.parsed_for_sheet.cpu_average }}\n**************************************************\nThroughtput (Average) : {{ $json.body.parsed_for_sheet.throughput_in_avg_raw }}\n**************************************************\n*INFORMATION*\n_{{ $json.body.sheet_update_status }}_\n**************************************************",
+        "additionalFields": {}
+      },
+      "id": "2fdbac5d-7230-44cb-814d-b7b35eac07ba",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -620
+      ],
+      "webhookId": "a3ac3859-cfc0-48c7-bf3d-3385a23b0b55",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "x0rtIaHdPrsdaw4v",
+          "name": "F5 Weekly Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram-Trigger').item.json[\"message\"][\"chat\"][\"id\"] }}",
+        "text": "Photo & URL Received",
+        "additionalFields": {}
+      },
+      "id": "bbe4e9ef-1ac7-4c8d-a4bc-36ac47940021",
+      "name": "Telegram3",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        840,
+        -40
+      ],
+      "webhookId": "a3ac3859-cfc0-48c7-bf3d-3385a23b0b55",
+      "credentials": {
+        "telegramApi": {
+          "id": "WA2hh3VwBwbhmtUb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  let outputJson = { ...item.json }; // Salin properti json yang sudah ada\n  outputJson.conversion_status = \"Belum diproses\"; // Status awal\n\n  // Pastikan item.binary dan item.binary.data ada\n  if (item.binary && item.binary.data && typeof item.binary.data === 'object') {\n    const binaryDataObject = item.binary.data; // Ini adalah objek n8n BinaryData\n\n    // Ambil string base64 dan mimeType langsung dari properti objek binaryDataObject\n    // Berdasarkan debug, string base64 ada di binaryDataObject.data\n    // dan mimeType ada di binaryDataObject.mimeType\n    if (typeof binaryDataObject.data === 'string' && binaryDataObject.data.length > 0 &&\n        typeof binaryDataObject.mimeType === 'string' && binaryDataObject.mimeType.length > 0) {\n      \n      outputJson.image_base64 = binaryDataObject.data; // Langsung ambil string base64\n      outputJson.mime_type = binaryDataObject.mimeType;   // Langsung ambil mimeType\n      outputJson.conversion_status = \"Berhasil: image_base64 dan mime_type diambil dari properti item.binary.data\";\n      \n      // Hapus pesan error sebelumnya jika ada\n      delete outputJson.error_conversion;\n      delete outputJson.debug_stage; // Hapus debug fields yang tidak perlu lagi\n\n    } else {\n      outputJson.error_conversion = \"Properti 'data' (string base64) atau 'mimeType' tidak ditemukan/valid di dalam objek item.binary.data.\";\n      outputJson.conversion_status = \"Gagal: Struktur item.binary.data tidak sesuai harapan (properti .data atau .mimeType salah).\";\n      // Tambahkan debug untuk tipe data aktual jika masih gagal\n      outputJson.debug_binaryDataObject_actual_data_type = typeof binaryDataObject.data;\n      outputJson.debug_binaryDataObject_actual_mimeType_type = typeof binaryDataObject.mimeType;\n    }\n  } else {\n    outputJson.error_conversion = \"Objek item.binary atau item.binary.data tidak ditemukan pada input.\";\n    outputJson.conversion_status = \"Gagal: Input data biner tidak ada.\";\n  }\n  \n  results.push({ json: outputJson });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -560
+      ],
+      "id": "9dc43fa8-1571-458f-bb3f-a7689d0ebce8",
+      "name": "Code",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "61e06d8b-136d-4bc0-8b1d-86eea3758336",
+              "leftValue": "={{ $json.body.parsed_for_sheet.hostname }}",
+              "rightValue": "=rgn-dc-lb1",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "c9ec684b-2fcc-49a6-8339-bd5c69795642",
+              "leftValue": "={{ $json.body.parsed_for_sheet.hostname }}",
+              "rightValue": "rgn-dc-lb2",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "1277ef8c-0766-4d0b-840c-80f0dcd7525c",
+              "leftValue": "={{ $json.body.parsed_for_sheet.hostname }}",
+              "rightValue": "tbn-dc-lb1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "5419f23d-a922-44a9-9c66-521231fbaa84",
+              "leftValue": "={{ $json.body.parsed_for_sheet.hostname }}",
+              "rightValue": "tbn-dc-lb2",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "0f1b94bd-23d6-4f43-bbaa-51ddca0f81a5",
+              "leftValue": "={{ $json.body.parsed_for_sheet.hostname }}",
+              "rightValue": "rgn-dz-lb1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": "={{ $json.body.parsed_for_sheet.hostname }}"
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1020,
+        -560
+      ],
+      "id": "3ee2f80d-77d6-4230-a96d-32e09478ed8e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Gambar ini tidak terbaca gess, \ntolong kirim gambar yang benar atau gambar yang lebih jelas🥴",
+        "additionalFields": {
+          "reply_to_message_id": "={{ $('Telegram Trigger').item.json.message.message_id }}"
+        }
+      },
+      "id": "0ae729d6-cc67-4e53-b7fa-fc951a9e30f6",
+      "name": "Telegram1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -440
+      ],
+      "webhookId": "a3ac3859-cfc0-48c7-bf3d-3385a23b0b55",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "x0rtIaHdPrsdaw4v",
+          "name": "F5 Weekly Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        20,
+        220
+      ],
+      "id": "c218261b-5874-4aab-a2d5-0116b8b07cd8",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "BrVjYaKHdrLJqz0s",
+          "name": "Azure Open AI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram2": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c618c359-cda8-4cbb-84d1-cc5a8d66acc9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c36e5b740d22dbf55a3da9c308a5c0c0100189fade1b17655061b17e5339162b"
+  },
+  "id": "RnvSQvNArD3tmHBR",
+  "tags": []
+}
